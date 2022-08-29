@@ -291,7 +291,7 @@ public class BubbleDialog extends Dialog
                 mBubbleLayout.setLook(BubbleLayout.Look.LEFT);
                 break;
             case BOTTOM:
-                mBubbleLayout.setLook(BubbleLayout.Look.TOP);
+                mBubbleLayout.setLook(BubbleLayout.Look.NONE);
                 break;
         }
         mBubbleLayout.initPadding();
