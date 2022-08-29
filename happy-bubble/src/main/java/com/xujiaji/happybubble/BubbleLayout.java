@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -70,7 +71,7 @@ public class BubbleLayout extends FrameLayout {
         /**
          * 坐上右下
          */
-        LEFT(1), TOP(2), RIGHT(3), BOTTOM(4);
+        LEFT(1), TOP(2), RIGHT(3), BOTTOM(4),NONE(5);
         int value;
 
         Look(int v) {
@@ -92,6 +93,10 @@ public class BubbleLayout extends FrameLayout {
                 case 4:
                     type = Look.BOTTOM;
                     break;
+                case 5:
+                    type = Look.NONE;
+                    break;
+
             }
 
             return type;
@@ -134,6 +139,9 @@ public class BubbleLayout extends FrameLayout {
             case RIGHT:
                 setPadding(p, p, p + mLookLength + mShadowX, p + mShadowY);
                 break;
+            case NONE:
+                setPadding(p, p, p  + mShadowX, p + mShadowY);
+                break;
         }
     }
 
@@ -141,7 +149,7 @@ public class BubbleLayout extends FrameLayout {
      * 初始化参数
      */
     private void initAttr(TypedArray a) {
-        mLook = Look.getType(a.getInt(R.styleable.BubbleLayout_lookAt, Look.BOTTOM.value));
+        mLook = Look.getType(a.getInt(R.styleable.BubbleLayout_lookAt, Look.NONE.value));
         mLookPosition = a.getDimensionPixelOffset(R.styleable.BubbleLayout_lookPosition, 0);
         mLookWidth = a.getDimensionPixelOffset(R.styleable.BubbleLayout_lookWidth, Util.dpToPx(getContext(), 13F));
         mLookLength = a.getDimensionPixelOffset(R.styleable.BubbleLayout_lookLength, Util.dpToPx(getContext(), 12F));
@@ -199,8 +207,12 @@ public class BubbleLayout extends FrameLayout {
      * 初始化数据
      */
     private void initData() {
-//        mPaint.setPathEffect(new CornerPathEffect(mBubbleRadius));
-        mPaint.setShadowLayer(mShadowRadius, mShadowX, mShadowY, mShadowColor);
+        mPaint.reset();
+        if (mLook== Look.NONE) {
+            mPaint.setPathEffect(new CornerPathEffect(mBubbleRadius));
+        }else {
+            mPaint.setShadowLayer(mShadowRadius, mShadowX, mShadowY, mShadowColor);
+        }
         mBubbleBorderPaint.setColor(mBubbleBorderColor);
         mBubbleBorderPaint.setStrokeWidth(mBubbleBorderSize);
         mBubbleBorderPaint.setStyle(Paint.Style.STROKE);
@@ -335,6 +347,10 @@ public class BubbleLayout extends FrameLayout {
                 } else {
                     mPath.quadTo(mLeft, mBottom, leftOffset + mLookWidth / 2F, mBottom + mLookLength);
                 }
+                break;
+            case NONE:
+                RectF rectF = new RectF(mLeft, mTop, mRight, mBottom);
+                mPath.addRoundRect(rectF,mBubbleRadius,mBubbleRadius,Path.Direction.CW);
                 break;
         }
 
