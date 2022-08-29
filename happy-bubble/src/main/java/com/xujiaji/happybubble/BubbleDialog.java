@@ -45,7 +45,8 @@ public class BubbleDialog extends Dialog
         /**
          * 下边
          */
-        BOTTOM
+        BOTTOM,
+        NONE
     }
 
     private BubbleLayout mBubbleLayout;
@@ -291,8 +292,10 @@ public class BubbleDialog extends Dialog
                 mBubbleLayout.setLook(BubbleLayout.Look.LEFT);
                 break;
             case BOTTOM:
-                mBubbleLayout.setLook(BubbleLayout.Look.NONE);
+                mBubbleLayout.setLook(BubbleLayout.Look.TOP);
                 break;
+            case NONE:
+                mBubbleLayout.setLook(BubbleLayout.Look.NONE);
         }
         mBubbleLayout.initPadding();
     }
